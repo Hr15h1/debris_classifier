@@ -1,0 +1,20 @@
+class TransformerDebrisClassifier(nn.Module):
+    def __init__(self, input_dim, num_classes, d_model=128, nhead=8, num_layers=4):
+        super().__init__()
+        self.embedding = nn.Linear(input_dim, d_model)
+        self.positional_encoding = PositionalEncoding(d_model)
+        encoder_layer = nn.TransformerEncoderLayer(d_model, nhead, batch_first=True)
+        self.transformer = nn.TransformerEncoder(encoder_layer, num_layers)
+        self.classifier = nn.Sequential(
+            nn.Linear(d_model, 256),
+            nn.ReLU(),
+            nn.Dropout(0.3),
+            nn.Linear(256, num_classes)
+        )
+    
+    def forward(self, x):
+        x = self.embedding(x)
+        x = self.positional_encoding(x)
+        x = self.transformer(x)
+        x = x.mean(dim=1)  # Global average pooling
+        return self.classifier(x)

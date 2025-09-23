@@ -2,3 +2,4 @@ venv/*
 .vscode/*
 debris-detection/*
 Debris Detection Dataset.v1i.coco/*
+debris_det_dataset/*

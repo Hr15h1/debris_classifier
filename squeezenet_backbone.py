@@ -83,6 +83,7 @@ def main():
         num_queries=100,
         num_labels=91, # COCO class count + 1 for "no object"
     )
+    
 
     print("Instantiating DetrForObjectDetection model...")
     # Instantiate the DETR model, passing both the custom config and the backbone instance.

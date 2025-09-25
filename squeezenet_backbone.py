@@ -58,62 +58,62 @@ class SqueezeNetBackbone(nn.Module):
 
         return out
 
-def main():
-    """
-    Example usage of the SqueezeNetBackbone with a Hugging Face DETR model.
-    """
-    print("Initializing custom SqueezeNet backbone...")
-    # Initialize our custom backbone. Set pretrained=False to avoid downloading weights
-    # during testing if you don't have them cached.
-    backbone = SqueezeNetBackbone(pretrained=True)
-    print(f"Backbone initialized. Output channels: {backbone.num_channels}")
+# def main():
+#     """
+#     Example usage of the SqueezeNetBackbone with a Hugging Face DETR model.
+#     """
+#     print("Initializing custom SqueezeNet backbone...")
+#     # Initialize our custom backbone. Set pretrained=False to avoid downloading weights
+#     # during testing if you don't have them cached.
+#     backbone = SqueezeNetBackbone(pretrained=True)
+#     print(f"Backbone initialized. Output channels: {backbone.num_channels}")
 
-    print("\nConfiguring DETR model to use the custom backbone...")
-    # Create a custom DETR configuration.
-    # The key steps are:
-    # 1. Set `backbone=None` and `use_timm_backbone=False` to tell the model we are
-    #    providing our own backbone module.
-    # 2. Set `num_channels` to match the output channels of our backbone (512).
-    config = DetrConfig(
-        backbone=None,
-        use_timm_backbone=False,
-        num_channels=backbone.num_channels,
-        use_pretrained_backbone=False,
-        # You can adjust other DETR parameters here if needed
-        num_queries=100,
-        num_labels=91, # COCO class count + 1 for "no object"
-    )
+#     print("\nConfiguring DETR model to use the custom backbone...")
+#     # Create a custom DETR configuration.
+#     # The key steps are:
+#     # 1. Set `backbone=None` and `use_timm_backbone=False` to tell the model we are
+#     #    providing our own backbone module.
+#     # 2. Set `num_channels` to match the output channels of our backbone (512).
+#     config = DetrConfig(
+#         backbone=None,
+#         use_timm_backbone=False,
+#         num_channels=backbone.num_channels,
+#         use_pretrained_backbone=False,
+#         # You can adjust other DETR parameters here if needed
+#         num_queries=100,
+#         num_labels=91, # COCO class count + 1 for "no object"
+#     )
     
 
-    print("Instantiating DetrForObjectDetection model...")
-    # Instantiate the DETR model, passing both the custom config and the backbone instance.
-    model = DetrForObjectDetection(config=config)
-    # Manually set the backbone to our custom SqueezeNet module.
-    model.backbone = backbone
-    model.eval() # Set model to evaluation mode
-    print("Model created successfully.")
+#     print("Instantiating DetrForObjectDetection model...")
+#     # Instantiate the DETR model, passing both the custom config and the backbone instance.
+#     model = DetrForObjectDetection(config=config)
+#     # Manually set the backbone to our custom SqueezeNet module.
+#     model.backbone = backbone
+#     model.eval() # Set model to evaluation mode
+#     print("Model created successfully.")
 
-    print("\nPreparing a dummy input image...")
-    # The image processor handles resizing and normalization.
-    image_processor = DetrImageProcessor()
-    # Create a dummy image with random data.
-    # Dimensions are (batch, channels, height, width).
-    dummy_image = torch.randint(0, 256, (1, 3, 480, 640)).float()
-    inputs = image_processor(images=dummy_image, return_tensors="pt")
+#     print("\nPreparing a dummy input image...")
+#     # The image processor handles resizing and normalization.
+#     image_processor = DetrImageProcessor()
+#     # Create a dummy image with random data.
+#     # Dimensions are (batch, channels, height, width).
+#     dummy_image = torch.randint(0, 256, (1, 3, 480, 640)).float()
+#     inputs = image_processor(images=dummy_image, return_tensors="pt")
 
-    print("Running a forward pass through the model...")
-    with torch.no_grad():
-        outputs = model(**inputs)
+#     print("Running a forward pass through the model...")
+#     with torch.no_grad():
+#         outputs = model(**inputs)
 
-    print("Forward pass successful!")
-    print("\n--- Output Shapes ---")
-    print(f"Logits (predictions): {outputs.logits.shape}")
-    print(f"Boxes (predictions):  {outputs.pred_boxes.shape}")
-    print("---------------------\n")
+#     print("Forward pass successful!")
+#     print("\n--- Output Shapes ---")
+#     print(f"Logits (predictions): {outputs.logits.shape}")
+#     print(f"Boxes (predictions):  {outputs.pred_boxes.shape}")
+#     print("---------------------\n")
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
 
 
 

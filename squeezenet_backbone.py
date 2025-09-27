@@ -4,6 +4,8 @@ from torch.nn import functional as F
 from torchvision import models
 from transformers import DetrConfig, DetrForObjectDetection, DetrImageProcessor
 
+from collections import OrderedDict
+
 class SqueezeNetBackbone(nn.Module):
     """
     SqueezeNet backbone for DETR.
@@ -54,9 +56,11 @@ class SqueezeNetBackbone(nn.Module):
 
         # DETR expects the output in a specific dictionary format.
         # For a single feature map output, we use the key '0'.
-        out = {'0': {'tensors': out_features, 'mask': mask}}
+        # out = {'tensors': out_features, 'mask': mask}
 
-        return out
+        out = [(out_features, mask)]
+
+        return out,None
 
 # def main():
 #     """
